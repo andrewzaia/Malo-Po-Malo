@@ -1,4 +1,4 @@
-# Malo po malo · Serbian practice
+# Malo Po Malo · Serbian practice
 
 A beginner Serbian practice website, ready for GitHub Pages. No installation, build command, database, or API keys are needed.
 
