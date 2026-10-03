@@ -28,18 +28,22 @@
     state.session={questions,index:0,results:[],selected:null,status:null,input:'',attempts:0,hinted:false,showHint:false,resolved:false,mixed};
   }
   function setLesson(id) {
+    if(window.SerbianTest?.isRunning())return;
     if(!D.lessons.some(l=>l.id===id)) throw new Error('Unknown lesson');
+    if(state.mode==='test')state.mode='learn';
     state.lesson=id;state.selected=0;state.revealed=false;
     if(state.mode!=='learn')startSession();
     render();
   }
   function setMode(mode,mixed=false) {
-    if(!['learn','quiz','practice'].includes(mode)) throw new Error('Unknown mode');
+    if(window.SerbianTest?.isRunning()&&mode!=='test')return;
+    if(!['learn','quiz','practice','test'].includes(mode)) throw new Error('Unknown mode');
     state.mode=mode;
-    if(mode!=='learn')startSession(mixed);
+    if(mode!=='learn'&&mode!=='test')startSession(mixed);
     render();
   }
   function setScript(script) {
+    if(window.SerbianTest?.isRunning())return;
     if(!['latin','cyrillic'].includes(script)) throw new Error('Unknown script');
     const selected=cards()[state.selected]?.id;
     state.script=script;
@@ -48,16 +52,31 @@
   }
   function render() {
     const l=lesson();
+    const testing=state.mode==='test',running=!!window.SerbianTest?.isRunning();
+    document.querySelector('.mode-nav').hidden=testing;
+    document.querySelector('.lesson-tip').hidden=testing;
+    $('mode-content').hidden=testing;
+    $('test-content').hidden=!testing;
+    $('testing-link').classList.toggle('active',testing);
+    if(testing)$('testing-link').setAttribute('aria-current','page');else $('testing-link').removeAttribute('aria-current');
     $('lesson-nav').innerHTML=D.lessons.map((item,i)=>`<button type="button" data-lesson="${item.id}" class="lesson-link ${item.id===state.lesson?'active':''}" ${item.id===state.lesson?'aria-current="page"':''}><span class="lesson-number">${String(i+1).padStart(2,'0')}</span><span><strong>${escape(item.title)}</strong><small>${escape(item.short)}</small></span></button>`).join('');
     $('lesson-kicker').innerHTML=`Lesson ${D.lessons.indexOf(l)+1} of 5 <span aria-hidden="true"> / </span> <span lang="${state.script==='cyrillic'?'sr-Cyrl':'sr-Latn'}">${escape(sr(l.serbian))}</span>`;
     $('lesson-title').textContent=l.title;
     $('lesson-description').textContent=l.description;
     $('lesson-count').textContent=l.cards.length+' cards · '+D.poolCounts[l.id].quiz+' quiz questions';
     $('tip-content').textContent=l.tip;
-    document.querySelectorAll('[data-script]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.script===state.script)));
+    document.querySelectorAll('[data-script]').forEach(b=>{b.setAttribute('aria-pressed',String(b.dataset.script===state.script));b.disabled=running;});
+    document.querySelectorAll('[data-lesson],[data-action="daily-mix"]').forEach(b=>b.disabled=running);
     document.querySelectorAll('[data-mode]').forEach(b=>{const active=b.dataset.mode===state.mode;b.setAttribute('aria-selected',String(active));b.tabIndex=active?0:-1;});
     $('mode-content').setAttribute('aria-labelledby','tab-'+state.mode);
-    if(state.mode==='learn')renderLearn();else renderExercise();
+    if(testing){
+      document.querySelectorAll('[data-lesson]').forEach(b=>{b.classList.remove('active');b.removeAttribute('aria-current');});
+      $('lesson-kicker').textContent='MIXED BEGINNER TEST';
+      $('lesson-title').textContent='A little of everything.';
+      $('lesson-description').textContent='100 questions across all five lessons. One minute for each answer.';
+      $('lesson-count').textContent='100 questions';
+      window.SerbianTest?.render();
+    }else if(state.mode==='learn')renderLearn();else renderExercise();
   }
   function renderLearn() {
     const l=lesson(), list=cards(), card=list[state.selected], isLetter=card.kind==='letter';
@@ -141,6 +160,7 @@
   }
   function selectCard(index) { if(!Number.isInteger(index)||index<0||index>=cards().length)throw new Error('Invalid card');state.selected=index;state.revealed=false;renderLearn(); }
   function doAction(action) {
+    if(action==='open-test'){setMode('test');return;}
     if(action==='reveal'){state.revealed=!state.revealed;renderLearn();document.querySelector('[data-action="reveal"]')?.focus();}
     if(action==='next-card'||action==='previous-card'){selectCard((state.selected+(action==='next-card'?1:-1)+cards().length)%cards().length);document.querySelector(`[data-action="${action}"]`)?.focus();}
     if(action==='next-question')nextQuestion();
@@ -167,22 +187,22 @@
     index=event.key==='Home'?0:event.key==='End'?2:(index+(event.key==='ArrowRight'?1:-1)+3)%3;
     setMode(modes[index]);$('tab-'+modes[index]).focus();
   });
-  document.querySelector('.brand').addEventListener('click',event=>{event.preventDefault();state.mode='learn';setLesson('alphabet');});
+  document.querySelector('.brand').addEventListener('click',event=>{event.preventDefault();if(window.SerbianTest?.isRunning())return;state.mode='learn';setLesson('alphabet');});
   const daily=document.querySelector('.daily-note');
   daily.insertAdjacentHTML('beforeend','<button type="button" class="small-button" data-action="daily-mix" style="margin-top:17px;width:100%">Practise a daily mix</button>');
   document.querySelector('.topbar').insertAdjacentHTML('beforeend','<button type="button" class="small-button mobile-mix" data-action="daily-mix">Daily mix</button>');
   render();
   // The same actions power both the interface and optional browser agent tools.
   const publicAPI={
-    readState(){const s=state.session;return {lesson:state.lesson,mode:state.mode,script:state.script,card:state.mode==='learn'?cards()[state.selected].id:null,revealed:state.revealed,question:s&&state.mode!=='learn'&&s.index<s.questions.length?{id:q().id,topic:q().topic,category:q().category,optionsScript:q().optionsScript,prompt:q().prompt,index:s.index,total:s.questions.length,resolved:s.resolved}:null,completed:!!s&&s.index>=s.questions.length};},
-    setLesson,setMode,setScript,selectCard,submitAnswer,chooseOption,nextQuestion,doAction
+    readState(){const s=state.session;if(state.mode==='test')return {lesson:null,mode:'test',script:state.script,card:null,revealed:false,question:null,test:window.SerbianTest?.readState(),completed:!!window.SerbianTest?.isComplete()};return {lesson:state.lesson,mode:state.mode,script:state.script,card:state.mode==='learn'?cards()[state.selected].id:null,revealed:state.revealed,question:s&&state.mode!=='learn'&&s.index<s.questions.length?{id:q().id,topic:q().topic,category:q().category,optionsScript:q().optionsScript,prompt:q().prompt,index:s.index,total:s.questions.length,resolved:s.resolved}:null,completed:!!s&&s.index>=s.questions.length};},
+    setLesson,setMode,setScript,selectCard,submitAnswer,chooseOption,nextQuestion,doAction,render
   };
   window.SerbianPractice=publicAPI;
   const context=document.modelContext;
   if(context?.registerTool){const lifecycle=new AbortController();window.addEventListener('pagehide',()=>lifecycle.abort(),{once:true});
     const definitions=[
       {name:'read_serbian_practice',description:'Read the current Serbian lesson and practice state without changing it.',inputSchema:{type:'object',properties:{},additionalProperties:false},annotations:{readOnlyHint:true,untrustedContentHint:false},execute(input){if(!input||Object.keys(input).length)throw new Error('No input fields expected');return publicAPI.readState();}},
-      {name:'start_serbian_lesson',description:'Open a beginner Serbian lesson in reference, quiz or typing mode. Starting a quiz or practice resets the current round.',inputSchema:{type:'object',properties:{lesson:{type:'string',enum:D.lessons.map(l=>l.id)},mode:{type:'string',enum:['learn','quiz','practice']}},required:['lesson','mode'],additionalProperties:false},annotations:{readOnlyHint:false,untrustedContentHint:false},execute(input){if(!input||!D.lessons.some(l=>l.id===input.lesson)||!['learn','quiz','practice'].includes(input.mode)||Object.keys(input).some(k=>!['lesson','mode'].includes(k)))throw new Error('Choose a valid lesson and mode');state.mode='learn';setLesson(input.lesson);setMode(input.mode);return publicAPI.readState();}},
+      {name:'start_serbian_lesson',description:'Open a beginner Serbian lesson in reference, quiz or typing mode. Starting a quiz or practice resets the current round.',inputSchema:{type:'object',properties:{lesson:{type:'string',enum:D.lessons.map(l=>l.id)},mode:{type:'string',enum:['learn','quiz','practice']}},required:['lesson','mode'],additionalProperties:false},annotations:{readOnlyHint:false,untrustedContentHint:false},execute(input){if(window.SerbianTest?.isRunning())throw new Error('Finish the active test before opening a lesson');if(!input||!D.lessons.some(l=>l.id===input.lesson)||!['learn','quiz','practice'].includes(input.mode)||Object.keys(input).some(k=>!['lesson','mode'].includes(k)))throw new Error('Choose a valid lesson and mode');state.mode='learn';setLesson(input.lesson);setMode(input.mode);return publicAPI.readState();}},
       {name:'check_serbian_practice_answer',description:'Submit a typed answer to the current typing question and return immediate feedback. Does not advance to the next question.',inputSchema:{type:'object',properties:{answer:{type:'string'}},required:['answer'],additionalProperties:false},annotations:{readOnlyHint:false,untrustedContentHint:false},execute(input){if(!input||typeof input.answer!=='string'||Object.keys(input).some(k=>k!=='answer'))throw new Error('Provide answer text');if(state.mode!=='practice'||!state.session||state.session.index>=state.session.questions.length||state.session.resolved)throw new Error('Open an unanswered typing question first');return submitAnswer(input.answer);}}
     ];
     definitions.forEach(tool=>{try{Promise.resolve(context.registerTool(tool,{signal:lifecycle.signal})).catch(()=>{});}catch{}});

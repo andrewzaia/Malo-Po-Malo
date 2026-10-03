@@ -20,3 +20,30 @@
 @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 
 .pool-note{font-size:.8rem;color:var(--muted);line-height:1.6;margin:-14px 0 22px}
+
+[hidden]{display:none!important}
+.testing-link{border-top:1px solid var(--border);border-radius:0 0 10px 10px;margin-top:-17px;padding-top:20px}
+.lesson-link:disabled{opacity:.55}
+.test-gate>p,.test-rules{font-size:1rem;color:var(--muted);line-height:1.7}
+.test-rules{padding-left:22px;margin:22px 0}.test-rules li{padding:5px 0}.test-rules strong{color:var(--navy);font-weight:650}
+.test-small-note{font-size:.875rem;color:var(--muted);line-height:1.6}.gate-note{margin:20px 0 0}
+.test-gate form{padding-top:21px;border-top:1px solid var(--border);margin-top:25px}
+.test-buttons{display:flex;flex-wrap:wrap;gap:10px;align-items:center}.test-error{color:#a1422a;font-size:.875rem;min-height:1.5em;margin:8px 0 16px}
+.test-meta{display:flex;justify-content:space-between;gap:20px;align-items:center;margin-bottom:20px}.test-meta p{margin:7px 0 0;font-size:.875rem;color:var(--muted)}
+.test-clock{display:flex;flex-direction:column;align-items:center;min-width:92px;padding:10px 15px;border:1px solid #d5def9;border-radius:12px;background:#f3f6ff}.test-clock>span{font-size:.875rem;color:var(--muted)}
+.test-clock strong{font-size:1.8rem;font-variant-numeric:tabular-nums;color:var(--blue);line-height:1.4}.test-clock .timer-low{color:#a3422b}
+.test-notice{font-size:.875rem;line-height:1.6;color:#84510b;margin:0 0 12px}.test-notice:empty{display:none}
+.test-answers{border:0;padding:0;margin:0;min-width:0}.test-answers legend{font-family:Georgia,serif;font-size:1.9rem;line-height:1.4;padding:0;margin-bottom:23px;letter-spacing:-.02em;width:100%;overflow-wrap:anywhere}
+.test-choice{border:1px solid var(--border);border-radius:10px;display:flex;align-items:center;gap:12px;padding:16px;min-height:65px;cursor:pointer;line-height:1.5;font-size:1rem;overflow-wrap:anywhere;min-width:0}
+.test-choice input{width:18px;height:18px;accent-color:var(--blue);flex-shrink:0;margin:0}.test-choice .choice-key{display:none}.test-choice:hover{background:#f6f8ff;border-color:#9faff1}.test-choice.selected{border-color:var(--blue);background:#edf2ff}
+.test-actions{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-top:24px}.test-actions p{font-size:.875rem;line-height:1.6;color:var(--muted);margin:0}
+.test-end{border-top:1px solid var(--border);margin-top:26px;padding-top:18px}.test-end p{font-size:.875rem;color:var(--muted);line-height:1.6}.text-button{border:0;padding:5px 0;background:none;color:var(--muted);font-size:.875rem;text-decoration:underline;min-height:40px}
+.test-score{display:flex;align-items:baseline;gap:14px;margin:15px 0 23px}.test-score strong{font-family:Georgia,serif;color:var(--blue);font-size:3.5rem;font-weight:500}.test-score span{color:var(--muted);font-size:1.2rem}
+.test-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:22px}.test-stats>div{border:1px solid var(--border);border-radius:11px;background:#f7f9ff;padding:16px}.test-stats strong{font-size:1.7rem;display:block;color:var(--navy)}.test-stats span{font-size:.875rem;display:block;margin-top:4px;color:var(--muted)}
+.test-result-meta{font-size:.875rem;color:var(--muted);line-height:1.6;margin-bottom:21px}.test-breakdown,.test-review{border-top:1px solid var(--border);padding-top:24px;margin-top:27px}.test-results h3{font-size:1.1rem;margin:0 0 16px;font-weight:650}
+.test-table-wrap{overflow-x:auto}.test-breakdown table{width:100%;border-collapse:collapse;font-size:.875rem;line-height:1.6;text-align:left}.test-breakdown th,.test-breakdown td{padding:12px 9px;border-bottom:1px solid var(--border)}.test-breakdown thead{color:var(--muted)}.test-breakdown tbody th{font-weight:600}.test-breakdown th:first-child{padding-left:0}
+.test-review-heading{display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between;align-items:center;margin-bottom:16px}.test-review-heading h3{margin:0}.test-filters{display:flex;flex-wrap:wrap;gap:5px}.test-filters button{background:#fff;border:1px solid var(--border);border-radius:7px;padding:9px 11px;font-size:.875rem;color:var(--muted);min-height:40px}.test-filters button[aria-pressed=true]{color:var(--blue);border-color:#bdcafa;background:#edf2ff}
+.test-review-item{border:1px solid var(--border);border-radius:11px;margin:10px 0;overflow:hidden;background:#fff}.test-review-item summary{cursor:pointer;display:flex;align-items:flex-start;gap:12px;padding:16px;list-style:none;font-size:1rem;line-height:1.6}.test-review-item summary::-webkit-details-marker{display:none}.test-review-item summary>span:nth-child(2){flex:1;min-width:0;overflow-wrap:anywhere}
+.test-review-number{font-size:.875rem;color:var(--muted);min-width:24px;padding-top:2px}.test-review-topic{display:block;font-size:.875rem;color:var(--muted);margin-bottom:3px}.test-status{font-size:.875rem;padding:3px 8px;border-radius:5px;background:#f0f2f7;color:#59667f;white-space:nowrap}.test-status.correct{background:#edf8f2;color:#176242}.test-status.incorrect{background:#fff1eb;color:#94442e}.test-status.missed{background:#fff4e6;color:#84510b}
+.test-review-body{padding:0 20px 17px 52px}.test-review-body p{margin:12px 0;line-height:1.6;font-size:1rem;overflow-wrap:anywhere}.test-review-body p>span{display:block;color:var(--muted);font-size:.875rem;margin-bottom:3px}.test-review-body strong{color:var(--blue);font-weight:600}.test-review-body .test-explanation{font-size:.875rem;color:var(--muted);border-top:1px solid #edf0f7;padding-top:12px}
+@media(max-width:600px){.test-answers legend{font-size:1.6rem}.test-choice{padding:14px}.test-actions{flex-direction:column;align-items:stretch}.test-actions button{width:100%}.test-buttons{align-items:stretch;flex-direction:column}.test-stats{gap:7px}.test-stats>div{padding:12px 10px}.test-review-item summary{padding:14px;gap:8px;flex-wrap:wrap}.test-review-item summary>span:nth-child(2){flex-basis:calc(100% - 34px)}.test-review-item .test-status{margin-left:32px}.test-review-body{padding:0 16px 16px}.test-score strong{font-size:3rem}}

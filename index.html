@@ -6,7 +6,7 @@
   <meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#234de4">
   <title>Malo po malo · Serbian practice</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23234de4'/%3E%3Ctext x='32' y='46' text-anchor='middle' font-family='Georgia' font-size='43' fill='white'%3EЋ%3C/text%3E%3C/svg%3E">
-  <link rel="stylesheet" href="styles.css"><script src="data.js" defer></script><script src="app.js" defer></script>
+  <link rel="stylesheet" href="styles.css"><script src="data.js" defer></script><script src="pdf-font.js" defer></script><script src="pdf-export.js" defer></script><script src="app.js" defer></script><script src="test.js" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#workspace">Skip to lesson</a>
@@ -15,6 +15,7 @@
     <a class="brand" href="#" aria-label="Malo po malo, home"><span class="brand-mark" lang="sr">Ћ</span><span>Malo po malo<span class="brand-sub">SERBIAN, A LITTLE EACH DAY</span></span></a>
     <div class="nav-label">YOUR LESSONS</div>
     <nav id="lesson-nav" aria-label="Lessons"></nav>
+    <button type="button" id="testing-link" class="lesson-link testing-link" data-action="open-test"><span class="lesson-number" aria-hidden="true">✓</span><span><strong>Testing</strong><small>100 mixed questions · timed</small></span></button>
     <div class="daily-note"><span class="note-label">A gentle daily rhythm</span><strong>Learn 5. Try 5.</strong><p>Say a few cards out loud, then try a short quiz. Repeat tomorrow.</p><div class="tiny-script" lang="sr">Мало по мало.</div></div>
     <div class="sidebar-bottom">Beginner · No rush, no timer</div>
   </aside>
@@ -24,6 +25,7 @@
       <div class="lesson-heading"><div><div id="lesson-kicker" class="eyebrow"></div><h1 id="lesson-title"></h1><p id="lesson-description"></p></div><span id="lesson-count" class="count-badge"></span></div>
       <div class="mode-nav" role="tablist" aria-label="Learning mode"><button type="button" role="tab" id="tab-learn" data-mode="learn" aria-controls="mode-content" aria-selected="true">Reference cards</button><button type="button" role="tab" id="tab-quiz" data-mode="quiz" aria-controls="mode-content" aria-selected="false" tabindex="-1">Quick quiz <span>5</span></button><button type="button" role="tab" id="tab-practice" data-mode="practice" aria-controls="mode-content" aria-selected="false" tabindex="-1">Type & practise</button></div>
       <section id="mode-content" role="tabpanel" aria-labelledby="tab-learn"></section>
+      <section id="test-content" aria-label="Mixed Serbian test" hidden></section>
       <aside class="lesson-tip"><span class="tip-icon" aria-hidden="true">i</span><div><strong>One thing to remember</strong><p id="tip-content"></p></div></aside>
       <footer><span>Little steps count. <span lang="sr">Malo po malo.</span></span><details class="source-details"><summary>Pronunciation & lesson notes</summary><p>“Sounds like” guides are approximate English cues, not exact phonetics or stress marks. Serbian č / ć and dž / đ are different sounds; English cannot represent them exactly. This beginner set uses common Ekavian forms.</p><p>Reference checks: <a href="https://www.studyserbian.com/proba/grammar/serb_alphabet_pdf/serbian_alphabet_with_pronunciation.pdf" target="_blank" rel="noopener noreferrer">alphabet</a>, <a href="https://www.studyserbian.com/proba/grammar/Pronouns_Personal.asp" target="_blank" rel="noopener noreferrer">pronouns</a>, <a href="https://www.serbianlesson.com/lessons/serbian-beginner/tobe1.html" target="_blank" rel="noopener noreferrer">to be</a>, <a href="https://www.serbianlesson.com/lessons/serbian-beginner/greetings1.html" target="_blank" rel="noopener noreferrer">greetings</a>, <a href="https://preply.com/en/blog/serbian-numbers/" target="_blank" rel="noopener noreferrer">numbers</a>, <a href="https://mobion.bg.ac.rs/files/IxA3eyLSng52/welcomeguide.pdf" target="_blank" rel="noopener noreferrer">everyday phrases</a>.</p></details></footer>
     </main>
