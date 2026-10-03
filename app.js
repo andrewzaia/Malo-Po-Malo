@@ -83,7 +83,7 @@
     let grid=list.map((c,i)=>{
       const selected=i===state.selected;
       let group='';
-      if(state.lesson==='numbers'&&[0,10,20,28].includes(i))group=`<div class="group-label">${{0:'1–10',10:'11–20',20:'Tens to 100',28:'Bigger numbers'}[i]}</div>`;
+      if(state.lesson==='numbers'&&[0,10,20,28,30].includes(i))group=`<div class="group-label">${{0:'1–10',10:'11–20',20:'Tens to 100',28:'Bigger numbers',30:'Zero'}[i]}</div>`;
       return group+`<button type="button" class="${isLetter?'letter-tile':'word-tile'}" data-card="${i}" aria-pressed="${selected}" aria-label="Study ${escape(c.label)}${c.sub?', '+escape(c.sub):''}"><span lang="${state.script==='cyrillic'?'sr-Cyrl':'sr-Latn'}">${escape(isLetter?sr(c.latin):state.lesson==='numbers'?c.label:sr(c.label))}</span>${isLetter?`<span class="secondary-letter" lang="${state.script==='cyrillic'?'sr-Latn':'sr-Cyrl'}">${escape(state.script==='cyrillic'?c.latin:D.cyrillic(c.latin))}</span>`:''}${c.sub?`<small>${escape(c.sub)}</small>`:''}</button>`;
     }).join('');
     const answer=isLetter?`<strong lang="sr">${escape(sr(card.example))}</strong><p>${escape(card.english)}</p>`:`<strong>${escape(card.english)}</strong>${card.example?`<p><span lang="sr">${escape(sr(card.example))}</span><br>${escape(card.exampleMeaning)}</p>`:''}`;

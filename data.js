@@ -82,12 +82,19 @@
   // Questions are composed only from the lesson's beginner vocabulary and forms.
   const quiz = Object.fromEntries(lessons.map(l => [l.id, []]));
   const practice = Object.fromEntries(lessons.map(l => [l.id, []]));
+  const quizPromptKeys = new Map();
   const unique = values => [...new Map(values.map(value => [normalise(String(value)), String(value)])).values()];
   function addQuiz(topic, prompt, answer, candidates, explanation, category, optionsScript = 'display') {
+    const promptKey = topic + ':' + normalise(prompt);
+    if (quizPromptKeys.has(promptKey)) {
+      if (normalise(quizPromptKeys.get(promptKey)) !== normalise(answer)) throw new Error('Conflicting answers: ' + prompt);
+      return;
+    }
     const wrong = unique(candidates).filter(value => normalise(value) !== normalise(answer));
     if (wrong.length < 3) throw new Error('Not enough distinct choices: ' + prompt);
     const offset = quiz[topic].length % wrong.length;
     const choices = [0, 1, 2].map(i => wrong[(offset + i) % wrong.length]);
+    quizPromptKeys.set(promptKey, answer);
     quiz[topic].push([prompt, answer, choices, explanation, {id: topic + '-quiz-' + quiz[topic].length, category, optionsScript}]);
   }
   function addPractice(topic, prompt, answers, hint, category, optionsScript = 'display') {
@@ -305,6 +312,273 @@
     addPractice('conversation', `Write “My name is ${name}”.`, [answer], 'Use Zovem se, then the name.', 'name-introduction');
   });
 
+  // Expanded A1 combinations. Each prompt includes the context needed for one answer.
+  const titleCase = value => value[0].toUpperCase() + value.slice(1);
+  const negativeForms = ['nisam','nisi','nije','nije','nije','nismo','niste','nisu','nisu','nisu'];
+  const soundGuide = text => (text.toLowerCase().match(/dž|lj|nj|[a-zčćšžđ]|[^a-zčćšžđ]+/g) || []).map(part => ({a:'ah',e:'eh',i:'ee',o:'oh',u:'oo',j:'y',c:'ts',č:'ch',ć:'soft-ch',š:'sh',ž:'zh',đ:'soft-j',dž:'j',lj:'ly',nj:'ny'}[part] || part)).join('');
+  const addCard = (bank,id,text,meaning,note,extra={}) => { if(!bank.some(c=>normalise(c.latin)===normalise(text)&&c.english===meaning))bank.push({id,latin:text,label:text,english:meaning,sound:soundGuide(text),note,...extra}); };
+  const addedLocations = [['u gradu','in town'],['u parku','in the park'],['u prodavnici','in the shop'],['u restoranu','in the restaurant'],['na poslu','at work'],['na stanici','at the station'],['u hotelu','in the hotel'],['u sobi','in the room']];
+  const allLocations = [...locations,...addedLocations];
+  const times = [['',''],['danas','today'],['sada','now']];
+  subjects.forEach((s,i) => {
+    s.negative=negativeForms[i];
+    addCard(be,'be-negative-'+i,`${s.pronoun} ${s.negative}`,`${s.meaning} ${s.verb==='sam'?'am':s.verb==='je'?'is':'are'} not`,'Negative biti is one word: nisam, nisi, nije, nismo, niste, nisu. It can stand at the beginning of a sentence.',{example:`${titleCase(s.pronoun)} ${s.negative} ovde.`,exampleMeaning:`${titleCase(s.meaning)} ${s.verb==='sam'?'am':s.verb==='je'?'is':'are'} not here.`});
+  });
+  allLocations.forEach(([place,meaning],i)=>addCard(be,'be-place-'+i,place,meaning,'A ready-made place phrase. Use it after a form of biti; keep the words together.'));
+  [['danas','today'],['sada','now'],['da li','yes/no question opener']].forEach(([word,meaning],i)=>addCard(be,'be-builder-'+i,word,meaning,word==='da li'?'Da li + short verb + subject + place: Da li si ti ovde?':'In these exercises, the time word comes last: Ja sam ovde danas.'));
+  const build = (s,place,time,negative=false) => `${titleCase(s.pronoun)} ${negative?s.negative:s.verb} ${place}${time?' '+time:''}.`;
+  const meaningFor = (s,place,time,negative=false) => `${titleCase(s.meaning)} ${s.verb==='sam'?'am':s.verb==='je'?'is':'are'}${negative?' not':''} ${place}${time?' '+time:''}.`;
+  const negativeChoices=unique(negativeForms);
+  subjects.forEach(s=>allLocations.forEach(([place,enPlace])=>times.forEach(([time,enTime])=>{
+    const clue=`${place} = ${enPlace}${time?'; '+time+' = '+enTime:''}.`;
+    const positive=build(s,place,time),negative=build(s,place,time,true);
+    const positiveMeaning=meaningFor(s,enPlace,enTime),negativeMeaning=meaningFor(s,enPlace,enTime,true);
+    if(time || addedLocations.some(p=>p[0]===place)){
+      addQuiz('be',`“${positiveMeaning}” Fill the verb: ${titleCase(s.pronoun)} ___ ${place}${time?' '+time:''}.`,s.verb,verbChoices,`${positive} ${clue}`,'positive-verb-expanded');
+      addQuiz('be',`Choose the sentence for “${positiveMeaning}”.`,positive,subjects.map(t=>build(t,place,time)),`${positive} ${clue}`,'positive-sentence-expanded');
+      addPractice('be',`Write “${positiveMeaning}”. Use subject + verb + place${time?' + time':''}. (${clue})`,[positive],`Begin ${s.pronoun} ${s.verb}.`,'positive-sentence-expanded');
+    }
+    addQuiz('be',`“${negativeMeaning}” Fill the negative verb: ${titleCase(s.pronoun)} ___ ${place}${time?' '+time:''}.`,s.negative,negativeChoices,`${negative} ${clue}`,'negative-verb');
+    addQuiz('be',`Choose the negative sentence for “${negativeMeaning}”.`,negative,[positive,...subjects.filter(t=>t.negative!==s.negative).map(t=>build(t,place,time,true))],`${negative} ${s.pronoun} uses ${s.negative}. ${clue}`,'negative-sentence');
+    addQuiz('be',`Read “${negative}”. Choose the meaning.`,negativeMeaning,[positiveMeaning,...subjects.map(t=>meaningFor(t,enPlace,enTime,true))],`${negative} = ${negativeMeaning}`,'negative-reading','english');
+    addPractice('be',`Make this sentence negative by replacing only the verb: ${positive}`, [s.negative],`${s.pronoun} uses ${s.negative}.`,'negative-verb');
+    addPractice('be',`Write “${negativeMeaning}”. Use subject + negative verb + place${time?' + time':''}. (${clue})`,[negative],`Begin ${s.pronoun} ${s.negative}.`,'negative-sentence');
+    const question=`Da li ${s.verb} ${s.pronoun} ${place}${time?' '+time:''}?`;
+    const enQuestion=`${s.verb==='sam'?'Am':s.verb==='je'?'Is':'Are'} ${s.meaning==='I'?'I':s.meaning} ${enPlace}${enTime?' '+enTime:''}?`;
+    addQuiz('be',`“${enQuestion}” Fill the verb: Da li ___ ${s.pronoun} ${place}${time?' '+time:''}?`,s.verb,verbChoices,`${question} Da li starts a yes/no question. ${clue}`,'question-verb');
+    addPractice('be',`Write “${enQuestion}”. Use Da li + verb + subject + place${time?' + time':''}. (${clue})`,[question],`Begin Da li ${s.verb} ${s.pronoun}.`,'question-sentence');
+    if(time || addedLocations.some(p=>p[0]===place)){
+      addQuiz('pronouns',`“${positiveMeaning}” Fill the subject: ___ ${s.verb} ${place}${time?' '+time:''}.`,s.pronoun,pronounChoices,`${positive} The subject is ${s.meaning}. ${clue}`,'subject-in-sentence');
+      addPractice('pronouns',`“${negativeMeaning}” Fill only the subject: ___ ${s.negative} ${place}${time?' '+time:''}.`,[s.pronoun],`Use the pronoun for ${s.meaning}. ${clue}`,'subject-in-negative');
+    }
+  })));
+  groups.forEach(([group,verb])=>allLocations.forEach(([place,enPlace])=>times.forEach(([time,enTime])=>{
+    if(!time && locations.some(p=>p[0]===place))return;
+    const sentence=`${titleCase(group)} ${verb} ${place}${time?' '+time:''}.`;
+    const rule=group.includes('ja')?'The group includes the speaker: use smo.':group.includes('ti')?'The group includes the listener, without the speaker: use ste.':verb==='je'?'One named person uses je.':'Several other people use su.';
+    addQuiz('be',`Fill the verb: ${titleCase(group)} ___ ${place}${time?' '+time:''}. (i = and; ${place} = ${enPlace}${time?'; '+time+' = '+enTime:''}.)`,verb,verbChoices,`${sentence} ${rule}`,'group-agreement-expanded');
+    addPractice('be',`Fill only the verb: ${titleCase(group)} ___ ${place}${time?' '+time:''}. (${place} = ${enPlace})`,[verb],rule,'group-agreement-expanded');
+  })));
+
+  const people=[['Ana','f'],['Jelena','f'],['Milica','f'],['Marija','f'],['Ivana','f'],['Sara','f'],['Marko','m'],['Petar','m'],['Nikola','m'],['Luka','m'],['Ivan','m'],['Stefan','m']];
+  const roles=[['a close friend','ti'],['your sibling, informally','ti'],['one classmate, informally','ti'],['a stranger, politely','vi'],['a shopkeeper, politely','vi'],['a teacher, politely','vi'],['two friends together','vi'],['several classmates together','vi']];
+  allLocations.forEach(([place,enPlace])=>{
+    roles.forEach(([role,answer])=>{
+      addQuiz('pronouns',`You are addressing ${role} and saying they are ${enPlace}. Choose the subject pronoun.`,answer,pronounChoices,`Use ${answer}. Ti is informal singular; vi is polite or plural.`,'listener-register');
+      addPractice('pronouns',`Address ${role}: ___ ${answer==='ti'?'si':'ste'} ${place}. Write the pronoun. (${place} = ${enPlace})`,[answer],answer==='ti'?'One person, informal: ti.':'Polite or plural: vi.','listener-register');
+    });
+    people.forEach(([name,gender])=>{
+      const answer=gender==='f'?'ona':'on';
+      addQuiz('pronouns',`${name} (${gender==='f'?'a woman':'a man'}) is ${enPlace}. Replace the name with “${gender==='f'?'she':'he'}”.`,answer,pronounChoices,`${name}: ${answer} (${gender==='f'?'she':'he'}).`,'named-person');
+      addPractice('pronouns',`${name} (${gender==='f'?'a woman':'a man'}): ___ je ${place}. Replace the name with a subject pronoun.`,[answer],`Use ${gender==='f'?'she':'he'}.`,'named-person');
+    });
+  });
+  const peopleGroups=[];
+  people.forEach((person,i)=>people.slice(i+1).forEach(other=>peopleGroups.push([person,other])));
+  peopleGroups.forEach(pair=>{
+    const label=pair.map(p=>p[0]).join(' and '), allFemale=pair.every(p=>p[1]==='f');
+    const groupPronoun=allFemale?'one':'oni';
+    const genderClue=allFemale?'both women':pair.every(p=>p[1]==='m')?'both men':'a mixed group';
+    [['here','ovde'],['at home','kod kuće'],['at school','u školi'],['in the park','u parku']].forEach(([enPlace,place])=>{
+      const scenarios=[
+        [`${label} (${genderClue}) are ${enPlace}. You are talking ABOUT them.`,groupPronoun,'They: use one for women and oni for men or a mixed group.'],
+        [`${label} are ${enPlace}. You are speaking TO both of them, saying “you”.`,'vi','Several listeners use vi.'],
+        [`You are ${enPlace} together with ${label}. You say “we” about the whole group.`,'mi','The speaker belongs to the group: use mi.']
+      ];
+      scenarios.forEach(([context,answer,rule])=>{
+        addQuiz('pronouns',context+' Choose the pronoun.',answer,pronounChoices,rule,'group-perspective');
+        addPractice('pronouns',context+' Write the subject pronoun.',[answer],rule,'group-perspective');
+      });
+    });
+  });
+  const nounGroups=[['selo','village','n','sela'],['dete','child','n','deca'],['pismo','letter (mail)','n','pisma'],['more','sea','n','mora'],['sunce','sun','n','sunca'],['ime','name','n','imena'],['knjiga','book','f','knjige'],['škola','school','f','škole'],['kuća','house','f','kuće'],['soba','room','f','sobe'],['grad','city','m','gradovi'],['park','park','m','parkovi']];
+  // Deca is a collective feminine noun, so do not derive its plural from dete.
+  nounGroups.forEach(([noun,en,gender,plural])=>{
+    const singular=gender==='n'?'ono':gender==='f'?'ona':'on';
+    addQuiz('pronouns',`The noun ${noun} (${en}) is ${gender==='n'?'neuter':gender==='f'?'feminine':'masculine'} singular. Which subject pronoun replaces it?`,singular,pronounChoices,`${noun}: use ${singular}. Serbian grammatical gender decides the pronoun.`,'noun-gender');
+    addPractice('pronouns',`Replace ${noun} (${en}, ${gender==='n'?'neuter':gender==='f'?'feminine':'masculine'} singular) with a subject pronoun.`,[singular],`Gender: ${gender==='n'?'neuter':gender==='f'?'feminine':'masculine'}.`,'noun-gender');
+    if(noun==='dete')return;
+    const answer=gender==='n'?'ona':gender==='f'?'one':'oni';
+    addQuiz('pronouns',`${plural} is the ${gender==='n'?'neuter':gender==='f'?'feminine':'masculine'} plural of ${noun} (${en}). Choose “they”.`,answer,pronounChoices,`Use ${answer} for this grammatical gender in the plural.`,'noun-plural');
+    addPractice('pronouns',`Write “they” for ${plural} (${gender==='n'?'neuter':gender==='f'?'feminine':'masculine'} plural).`,[answer],'Plural choices: oni (masculine), one (feminine), ona (neuter).','noun-plural');
+  });
+
+  baseNumbers.set(0,'nula');
+  addCard(numbers,'number-zero','nula','0','Zero: useful when reading digits one at a time.',{label:'0'});
+  const smallValues=Array.from({length:101},(_,i)=>i),smallWords=smallValues.map(numberWord);
+  addQuiz('numbers','Choose the Serbian counting word for 0.','nula',smallWords,'0 = nula.','zero');
+  addPractice('numbers','Write zero in Serbian.',['nula'],'It starts with n.','zero');
+  smallValues.forEach(n=>{
+    [1,2,5,10].forEach(step=>{
+      if(n+2*step>100)return;
+      const sequence=[n,n+step,n+2*step],answer=numberWord(sequence[2]);
+      addQuiz('numbers',`Count upwards by ${step}: ${numberWord(n)}, ${numberWord(n+step)}, ___. Choose the next Serbian number.`,answer,smallWords,`${sequence.join(', ')}: ${sequence.map(numberWord).join(', ')}.`,'counting-sequence');
+      addPractice('numbers',`Count upwards by ${step}: ${numberWord(n)}, ${numberWord(n+step)}, ___. Write the next number in Serbian.`,[answer],`Add ${step} to ${n+step}.`,'counting-sequence');
+    });
+    [1,2,5,10].forEach(step=>{
+      if(n-2*step<0)return;
+      const sequence=[n,n-step,n-2*step],answer=numberWord(sequence[2]);
+      addQuiz('numbers',`Count backwards by ${step}: ${numberWord(n)}, ${numberWord(n-step)}, ___.`,answer,smallWords,`${sequence.join(', ')}: ${sequence.map(numberWord).join(', ')}.`,'backwards-sequence');
+      addPractice('numbers',`Count backwards by ${step}: ${numberWord(n)}, ${numberWord(n-step)}, ___. Write the next number in Serbian.`,[answer],`Subtract ${step} from ${n-step}.`,'backwards-sequence');
+    });
+    if(n<100){
+      addQuiz('numbers',`Which Serbian number is one more than “${numberWord(n)}”?`,numberWord(n+1),smallWords,`${n} + 1 = ${n+1}: ${numberWord(n+1)}.`,'one-more');
+      addQuiz('numbers',`Put ${numberWord(n+1)} and ${numberWord(n)} in increasing order (smaller first).`,`${numberWord(n)}, ${numberWord(n+1)}`,[`${numberWord(n+1)}, ${numberWord(n)}`,`${numberWord(n)}, ${numberWord((n+2)%101)}`,`${numberWord((n+2)%101)}, ${numberWord(n+1)}`],`${n} comes before ${n+1}.`,'number-order');
+    }
+  });
+  for(let a=1;a<=20;a++)for(let b=1;b<=10;b++){
+    const answer=numberWord(a+b);
+    addQuiz('numbers',`Add ${numberWord(a)} + ${numberWord(b)}. Choose the answer in Serbian.`,answer,smallWords,`${a} + ${b} = ${a+b}: ${answer}.`,'number-addition');
+    addPractice('numbers',`Add ${numberWord(a)} + ${numberWord(b)}. Write the result in Serbian.`,[answer],`${a} + ${b} = ${a+b}.`,'number-addition');
+    const difference=numberWord(a);
+    addQuiz('numbers',`Subtract ${numberWord(a+b)} − ${numberWord(b)}. Choose the result in Serbian.`,difference,smallWords,`${a+b} − ${b} = ${a}: ${difference}.`,'number-subtraction');
+    addPractice('numbers',`Subtract ${numberWord(a+b)} − ${numberWord(b)}. Write the result in Serbian.`,[difference],`${a+b} − ${b} = ${a}.`,'number-subtraction');
+  }
+  for(let a=0;a<10;a++)for(let b=0;b<10;b++){
+    const text=`${numberWord(a)}, ${numberWord(b)}`,digits=`${a} ${b}`;
+    addQuiz('numbers',`Read these code digits separately: ${digits}. Choose the words in the same order.`,text,[`${numberWord((a+1)%10)}, ${numberWord(b)}`,`${numberWord(a)}, ${numberWord((b+1)%10)}`,`${numberWord((a+2)%10)}, ${numberWord((b+2)%10)}`],`${digits} is read ${text}. These are separate digits, not one whole number.`,'code-digits');
+    addQuiz('numbers',`A code is read “${text}”. Which two digits were spoken, in order?`,digits,[`${(a+1)%10} ${b}`,`${a} ${(b+1)%10}`,`${(a+2)%10} ${(b+2)%10}`],`${text} = ${digits}.`,'read-code','digits');
+    addPractice('numbers',`Write code digits ${digits} as two separate Serbian words.`,[text],`${a} = ${numberWord(a)}; ${b} = ${numberWord(b)}. Use a space or comma between words.`,'code-digits');
+  }
+
+  const newPhrases=[
+    ['Vidimo se.','See you.','vee-dee-moh seh','A friendly goodbye.'],
+    ['Vidimo se sutra.','See you tomorrow.','vee-dee-moh seh soo-trah','Sutra means tomorrow.'],
+    ['Vidimo se kasnije.','See you later.','vee-dee-moh seh kah-snee-yeh','Kasnije means later.'],
+    ['Kako se kaže?','How do you say it?','kah-koh seh kah-zheh','A useful question while learning.'],
+    ['Šta je ovo?','What is this?','shtah yeh oh-voh','Ask about something nearby.'],
+    ['Gde je stanica?','Where is the station?','gdeh yeh stah-nee-tsah','Gde means where.'],
+    ['Koliko košta?','How much does it cost?','koh-lee-koh koh-shtah','A simple price question.'],
+    ['Račun, molim.','The bill, please.','rah-choon moh-leem','Ask for the bill at a café or restaurant.'],
+    ['Vodu, molim.','Water, please.','voh-doo moh-leem','Vodu is the request form of voda.'],
+    ['Kafu, molim.','Coffee, please.','kah-foo moh-leem','Kafu is the request form of kafa.'],
+    ['Čaj, molim.','Tea, please.','chay moh-leem','A short, polite request.'],
+    ['Sok, molim.','Juice, please.','sohk moh-leem','A short, polite request.'],
+    ['Ponovite, molim vas.','Repeat, please. · polite','poh-noh-vee-teh moh-leem vahs','Ask someone to repeat politely.'],
+    ['Sporije, molim vas.','More slowly, please. · polite','spoh-ree-yeh moh-leem vahs','Ask someone to slow down.'],
+    ['Učim srpski.','I am learning Serbian.','oo-cheem srp-skee','Srpski means Serbian.'],
+    ['Govorim malo srpski.','I speak a little Serbian.','goh-voh-reem mah-loh srp-skee','Malo means a little.'],
+    ['Govorim engleski.','I speak English.','goh-voh-reem ehn-gleh-skee','Engleski means English.'],
+    ['Ne govorim srpski.','I do not speak Serbian.','neh goh-voh-reem srp-skee','Ne makes govorim negative.'],
+    ['Gde si?','Where are you? · informal','gdeh see','Ask one friend.'],
+    ['Gde ste?','Where are you? · polite / plural','gdeh steh','Ask politely or address a group.'],
+    ['Odakle si?','Where are you from? · informal','oh-dah-kleh see','Ask one friend.'],
+    ['Odakle ste?','Where are you from? · polite / plural','oh-dah-kleh steh','Ask politely or address a group.'],
+    ['Iz Australije sam.','I am from Australia.','eez ow-strah-lee-yeh sahm','Iz + country in its from-form; learn the phrase as a whole.'],
+    ['Iz Srbije sam.','I am from Serbia.','eez sr-bee-yeh sahm','Learn the country phrase as a whole.']
+  ];
+  newPhrases.forEach((r,i)=>conversation.push({id:'phrase-expanded-'+i,latin:r[0],label:r[0],english:r[1],sound:r[2],note:r[3]}));
+  similarPhrases.push(['Vidimo se.','Vidimo se sutra.','Vidimo se kasnije.','Doviđenja','Ćao'],['Gde si?','Gde ste?'],['Odakle si?','Odakle ste?'],['Hvala','Hvala lepo.','Ne, hvala.'],['Molim','Da, molim.','Račun, molim.','Vodu, molim.','Kafu, molim.','Čaj, molim.','Sok, molim.']);
+  const allPhraseTokens=unique(conversation.flatMap(c=>c.latin.replace(/[.,!?]/g,'').split(' ')));
+  newPhrases.forEach(r=>{
+    const text=r[0],meaning=r[1],safe=safePhrases(text);
+    addQuiz('conversation',`Choose the lesson phrase for “${meaning}”.`,text,safe,`${text} = ${meaning} ${r[3]}`,'meaning-to-new-phrase');
+    addQuiz('conversation',`What does “${text}” mean?`,meaning,conversation.filter(c=>safe.includes(c.latin)).map(c=>c.english),`${text} = ${meaning}`,'new-phrase-reading','english');
+    addPractice('conversation',`Write the lesson phrase for “${meaning}”.`,[text],r[3],'new-phrase-writing');
+  });
+  conversation.forEach(card=>{
+    const tokens=card.latin.replace(/[.,!?]/g,'').split(' ');
+    if(tokens.length<2)return;
+    tokens.forEach((token,i)=>{
+      if(i===tokens.length-1 && !newPhrases.some(r=>r[0]===card.latin))return;
+      const gap=tokens.map((v,j)=>j===i?'___':v).join(' ');
+      addQuiz('conversation',`“${card.english}” Complete: ${gap}.`,token,allPhraseTokens,`The whole phrase is ${card.latin}`,'phrase-position-gap');
+      addPractice('conversation',`“${card.english}” Complete: ${gap}. Type only the missing word.`,[token],card.note,'phrase-position-gap');
+    });
+    const ordered=tokens.join(' '),reversed=[...tokens].reverse().join(' ');
+    const alternatives=[reversed,...allPhraseTokens.filter(t=>normalise(t)!==normalise(tokens[0])).slice(0,5).map(t=>[t,...tokens.slice(1)].join(' '))];
+    addQuiz('conversation',`Choose the lesson word order for “${card.english}”. Words: ${[...tokens].reverse().join(' / ')}.`,ordered,alternatives,`The lesson phrase is ${card.latin}`,'phrase-order');
+    addPractice('conversation',`Arrange these words to write the lesson phrase for “${card.english}”: ${[...tokens].reverse().join(' / ')}.`,[card.latin],card.note,'phrase-order');
+  });
+  const namePool=people.map(p=>p[0]);
+  namePool.forEach(name=>{
+    ['Kako se zoveš?','Kako se zovete?'].forEach(question=>{
+      const answer=`Zovem se ${name}.`;
+      addQuiz('conversation',`A: ${question} B: ___ (My name is ${name}.)`,answer,namePool.map(n=>`Zovem se ${n}.`),`${answer} introduces ${name}.`,'introduction-dialogue');
+      addPractice('conversation',`A: ${question} B: ___ Write “My name is ${name}”.`,[answer],'Use Zovem se, then the name.','introduction-dialogue');
+    });
+    ['Australije','Srbije','Engleske','Kanade','Francuske','Nemačke'].forEach((country,i)=>{
+      const countryEnglish=['Australia','Serbia','England','Canada','France','Germany'][i];
+      const answer=`Zovem se ${name}. Iz ${country} sam.`;
+      addQuiz('conversation',`Introduce yourself as ${name}, from ${countryEnglish}. Choose two sentences.`,answer,namePool.filter(n=>n!==name).map(n=>`Zovem se ${n}. Iz ${country} sam.`),`${answer} Use Iz ${country} sam for “I am from ${countryEnglish}”.`,'name-and-country');
+      addPractice('conversation',`Write two sentences: “My name is ${name}. I am from ${countryEnglish}.” Use Zovem se … / Iz ${country} sam.`,[answer],`Zovem se ${name}. Then Iz ${country} sam.`,'name-and-country');
+    });
+  });
+  const requests=[['Vodu','water'],['Kafu','coffee'],['Čaj','tea'],['Sok','juice'],['Račun','the bill']];
+  ['a café','a restaurant','a hotel café','a small coffee shop'].forEach(setting=>requests.forEach(([word,en])=>{
+    const answer=`${word}, molim.`;
+    addQuiz('conversation',`You are at ${setting}. Ask for ${en} with a short “…, please” request.`,answer,requests.map(([w])=>`${w}, molim.`),`${answer} = ${titleCase(en)}, please.`,'request-situation');
+    addPractice('conversation',`At ${setting}, write the short request “${titleCase(en)}, please”.`,[answer],`Use ${word}, then molim.`,'request-situation');
+  }));
+  const directionNouns=[['stanica','the station'],['prodavnica','the shop'],['hotel','the hotel'],['restoran','the restaurant'],['park','the park'],['škola','the school']];
+  directionNouns.forEach(([noun,en],i)=>{
+    const question=`Gde je ${noun}?`;
+    addCard(conversation,'phrase-direction-'+i,question,`Where is ${en}?`,'Gde je + place: ask where one place is.');
+    addQuiz('conversation',`Ask “Where is ${en}?”`,question,directionNouns.map(([n])=>`Gde je ${n}?`),`${question} = Where is ${en}?`,'directions');
+    addPractice('conversation',`Write “Where is ${en}?” (${noun} = ${en})`,[question],'Use Gde je, then the place.','directions');
+  });
+  const replyPlaces=[['kod kuće','at home'],['u školi','at school'],['u parku','in the park'],['na poslu','at work'],['u hotelu','in the hotel'],['u prodavnici','in the shop']];
+  ['Gde si?','Gde ste?'].forEach(question=>replyPlaces.forEach(([place,en])=>{
+    const answer=`Ja sam ${place}.`;
+    addQuiz('conversation',`A: ${question} B: ___ (I am ${en}.)`,answer,replyPlaces.map(([p])=>`Ja sam ${p}.`),`${answer} replies to “Where are you?”.`,'location-dialogue');
+    addPractice('conversation',`A: ${question} B: ___ Write “I am ${en}” using Ja sam. (${place} = ${en})`,[answer],`Ja sam ${place}.`,'location-dialogue');
+  }));
+  ['Dobro jutro','Dobar dan','Dobro veče'].forEach(greeting=>namePool.forEach(name=>{
+    const answer=`${greeting}. Zovem se ${name}.`;
+    addQuiz('conversation',`Use “${conversation.find(c=>c.latin===greeting).english}”, then introduce yourself as ${name}.`,answer,namePool.filter(n=>n!==name).map(n=>`${greeting}. Zovem se ${n}.`),`${greeting} is the greeting. Zovem se ${name} gives the name.`,'greeting-introduction');
+    addPractice('conversation',`Write “${conversation.find(c=>c.latin===greeting).english}. My name is ${name}.” Use two sentences.`,[answer],'Greeting first, then Zovem se and the name.','greeting-introduction');
+  }));
+  ['Kako si?','Kako ste?'].forEach(question=>['Dobro sam.','Dobro, hvala.'].forEach(reply=>['A ti?','A vi?'].forEach(returnQuestion=>{
+    if((question==='Kako si?')!==(returnQuestion==='A ti?'))return;
+    const answer=`${reply} ${returnQuestion}`;
+    const meaning=`${conversation.find(c=>c.latin===reply).english} ${returnQuestion==='A ti?'?'And you? (informal)':'And you? (polite)'}`;
+    addQuiz('conversation',`A: ${question} B: ___ (${meaning})`,answer,['Ne razumem.','Zovem se Ana.','Govorite li engleski?'],`${answer} gives the requested reply and returns the question.`,'return-question-dialogue');
+    addPractice('conversation',`A: ${question} Write the reply “${meaning}”.`,[answer],`Use ${reply}, followed by ${returnQuestion}.`,'return-question-dialogue');
+  })));
+
+  const countryPairs=[['Australije','Australia'],['Srbije','Serbia'],['Engleske','England'],['Kanade','Canada'],['Francuske','France'],['Nemačke','Germany']];
+  countryPairs.forEach(([country,en],i)=>addCard(conversation,'phrase-country-'+i,`Iz ${country} sam.`,`I am from ${en}.`,'Learn the country phrase as a whole: iz means from, and the country has its from-form.'));
+  ['Dobro jutro','Dobar dan','Dobro veče'].forEach(greeting=>namePool.forEach(name=>countryPairs.forEach(([country,enCountry])=>{
+    const text=`${greeting}. Zovem se ${name}. Iz ${country} sam.`;
+    const enGreeting=conversation.find(c=>c.latin===greeting).english;
+    addQuiz('conversation',`Read this introduction: “${text}” What is the speaker's name?`,name,namePool,`Zovem se ${name} means My name is ${name}.`,'read-combined-name','latin');
+    addQuiz('conversation',`Read this introduction: “${text}” Where is the speaker from?`,enCountry,countryPairs.map(p=>p[1]),`Iz ${country} sam means I am from ${enCountry}.`,'read-combined-country','english');
+    addQuiz('conversation',`Read this introduction: “${text}” What does the opening greeting mean?`,enGreeting,['Good morning','Good day','Good evening','Good night','Goodbye'],`${greeting} means ${enGreeting}.`,'read-combined-greeting','english');
+    addPractice('conversation',`Write three short sentences: “${enGreeting}. My name is ${name}. I am from ${enCountry}.” Use ${greeting} / Zovem se … / Iz ${country} sam.`,[text],'Keep the order: greeting, name, country.','combined-introduction');
+  })));
+
+  // Reading drills reuse familiar lesson words. Lj, nj and dž count as one letter.
+  const letterTokens = word => word.toLowerCase().match(/dž|lj|nj|[a-zčćšžđ]/g) || [];
+  const readWords = unique([...alphabet.map(c=>c.example),...conversation.flatMap(c=>c.latin.replace(/[.,!?]/g,'').split(' ')),...smallWords.flatMap(w=>w.split(' ')),...allLocations.flatMap(([p])=>p.split(' ')),...negativeForms,...namePool,...nounGroups.map(r=>r[0])]);
+  readWords.forEach(word=>{
+    if(words.some(w=>normalise(w)===normalise(word)))return;
+    const cy=cyrillic(word),tokens=letterTokens(word);
+    addQuiz('alphabet',`Read ${cy}. Choose the matching Latin word.`,word,readWords,`${cy} = ${word}.`,'expanded-word-latin','latin');
+    addQuiz('alphabet',`Choose the Cyrillic spelling of “${word}”.`,cy,readWords.map(cyrillic),`${word} = ${cy}.`,'expanded-word-cyrillic','cyrillic');
+    addPractice('alphabet',`Write ${cy} in Latin.`,[word],`First letter: ${titleCase(tokens[0])}. ${tokens.length} Serbian letters.`,'expanded-word-latin','latin');
+  });
+  readWords.forEach(word=>{
+    const tokens=letterTokens(word);
+    addQuiz('alphabet',`How many Serbian letters are in “${word}” (${cyrillic(word)})? Count lj, nj and dž as one each.`,String(tokens.length),[1,2,3,4,5,6,7,8,9,10,11,12,13,14].map(String),`${tokens.map(titleCase).join(' · ')}: ${tokens.length} letters.`,'letter-count','digits');
+    addQuiz('alphabet',`Which Serbian Latin letter ends “${word}”?`,titleCase(tokens.at(-1)),latinLetters,`The final letter is ${titleCase(tokens.at(-1))}.`,'final-letter','latin');
+    addPractice('alphabet',`Write the final Latin letter of “${word}”.`,[tokens.at(-1)],`Read the ending: ${cyrillic(word)}.`,'final-letter','latin');
+    if(tokens.length>1)tokens.forEach((letter,i)=>{
+      const gap=tokens.map((t,j)=>i===j?'___':t).join(' · ');
+      addQuiz('alphabet',`Copy ${cyrillic(word)} into Latin: ${gap}. Which Serbian letter fills the gap?`,titleCase(letter),latinLetters,`${word}: ${tokens.map(titleCase).join(' · ')}. Lj, nj and dž each occupy one slot.`,'letter-position','latin');
+      addPractice('alphabet',`Copy ${cyrillic(word)} into Latin: ${gap}. Type only the missing Serbian letter.`,[letter],`There are ${tokens.length} Serbian letters in this word.`,'letter-position','latin');
+    });
+  });
+  alphabet.forEach((card,i)=>{
+    [1,2,3,5,7,11].forEach(offset=>{
+      const next=alphabet[(i+offset)%alphabet.length],pair=`${card.latin.toLowerCase()} ${next.latin.toLowerCase()}`,cy=cyrillic(pair);
+      const wrong=[1,2,3].map(j=>`${card.latin.toLowerCase()} ${alphabet[(i+offset+j)%alphabet.length].latin.toLowerCase()}`);
+      addQuiz('alphabet',`Read this pair of letters: ${cy}. Choose the Latin letters in the same order.`,pair,wrong,`${cy} = ${pair}. These are two separate letters.`,'letter-pair-latin','latin');
+      addQuiz('alphabet',`Choose the Cyrillic pair for these separate Latin letters: ${pair}.`,cy,wrong.map(cyrillic),`${pair} = ${cy}.`,'letter-pair-cyrillic','cyrillic');
+      addPractice('alphabet',`Write this letter pair in Latin, with a space: ${cy}.`,[pair],`${card.latin} + ${next.latin}.`,'letter-pair-latin','latin');
+    });
+  });
+
+
   // A visit-local deck cycles through every question before refilling. Each short
   // round mixes question families and excludes duplicate IDs even at a cycle edge.
   function createQuestionDeck(pool, random = Math.random) {
@@ -331,7 +605,11 @@
   const poolCounts=Object.fromEntries(lessons.map(l=>[l.id,{quiz:quiz[l.id].length,practice:practice[l.id].length}]));
   lessons.find(l=>l.id==='numbers').tip='For 21–99, say the tens first and then the units: dvadeset jedan (21), trideset dva (32), četrdeset pet (45). Keep them as separate words. Start with 1–20 and the tens cards, then try combinations.';
   lessons.find(l=>l.id==='be').tip='Everyday short forms: sam, si, je, smo, ste, su. In groups, i means and: Ana i ja smo (we), ti i Ana ste (you plural), Ana i Marko su (they). Short forms follow a word or phrase; they do not start a sentence.';
-  be.forEach(card=>{card.note='Sentence words: ovde = here, tamo = there, kod kuće = at home, u školi = at school. Swap the place; keep the verb matched to the person.';});
+  be.filter(card=>/^be-[0-9]+$/.test(card.id)).forEach(card=>{card.note='Sentence words: ovde = here, tamo = there, kod kuće = at home, u školi = at school. Swap the place; keep the verb matched to the person.';});
+  lessons.find(l=>l.id==='be').tip += ' Negative forms are nisam, nisi, nije, nismo, niste, nisu. Start questions with Da li + short verb + subject. Learn the place and time cards before trying longer combinations.';
+  lessons.find(l=>l.id==='numbers').tip += ' Nula is zero. Practise counting forwards and backwards, simple sums, and code digits read separately.';
+  lessons.find(l=>l.id==='conversation').description='Greet people, introduce yourself, order a drink, and ask for directions or a little help.';
+  lessons.find(l=>l.id==='alphabet').tip += ' Reading exercises reuse words from the other lessons. When counting or filling letter slots, lj, nj and dž each count as one letter.';
   window.Serbian={lessons,quiz,practice,cyrillic,latin,normalise,assess,createQuestionDeck,poolCounts,numberWord};
 
 })();

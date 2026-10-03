@@ -44,13 +44,25 @@ The HTML keeps `<meta name="robots" content="noindex,nofollow">`. This asks sear
 ## Included practice
 
 - Five lessons: alphabet, numbers, pronouns, forms of “to be”, and basic conversation.
-- 109 reference cards, 882 quiz questions, and 595 typing exercises.
+- 168 reference cards, 9,007 quiz questions, and 6,814 typing exercises.
 - Latin/Cyrillic switching, answer reveals, hints, and immediate feedback.
 - Five-question quizzes and eight-question typing or daily mixed rounds.
 - The updated completion review with question cards and labelled correct answers.
 - Password-gated 100-question tests: 20 questions per topic, one minute each, immediate results and a downloadable PDF review.
 
 Open `index.html` locally to practise before publishing. Session progress resets on reload. Pronunciation cues are approximate English guides.
+
+## Expanded combinations
+
+| Category | Quiz questions | Typing exercises |
+| --- | ---: | ---: |
+| Alphabet | 1,935 | 1,373 |
+| Numbers | 1,885 | 1,483 |
+| Pronouns | 1,420 | 1,410 |
+| To be | 2,642 | 1,912 |
+| Conversation | 1,125 | 636 |
+
+Practise letter pairs, word spelling and letter counts; numbers 0–100, forward/backward sequences, simple sums and separate code digits; named groups, speaker/listener viewpoints and noun gender; positive/negative/question sentences across twelve locations with today/now variations; café requests, directions and combined greeting/name/country introductions. The original 1,000 and 10,000 cards remain included. New sentence builders and everyday phrases have reference cards. Quizzes still draw five questions, typing rounds eight, and tests twenty per category. Exact repeated quiz prompts are removed.
 
 ## Timed test
 
@@ -69,4 +81,4 @@ Check that `index.html` is at the repository root, all seven website files are u
 - [Configure the publishing source](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site)
 - [Create a GitHub Pages site](https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site)
 
-The website files match the latest exported version. ZIP integrity, local asset references, and serving from a repository-style subdirectory were checked. Timing, scoring, both scripts, PDF download and existing lesson interactions passed programmatic checks. PDF text and rendered pages were checked. Browser visual testing of the website was unavailable.
+The website files match the expanded Serbian version. All 9,007 quiz questions and 6,814 typing exercises passed bank validation, including distinct prompts/IDs, both scripts, full question rotation and independent spelling/agreement examples. ZIP integrity, local asset references, and serving from a repository-style subdirectory were checked. Timing, scoring, both scripts, PDF download and existing lesson interactions passed programmatic checks. PDF text and rendered pages were checked. Browser visual testing of the website was unavailable.
