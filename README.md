@@ -4,14 +4,15 @@ A beginner and intermediate Serbian practice website, ready for GitHub Pages. No
 
 ## Files to upload
 
-Upload all twelve files directly to the root of your repository:
+Upload all thirteen files directly to the root of your repository:
 
 | File | Purpose |
 | --- | --- |
 | `index.html` | Website entry page |
 | `styles.css` | Desktop and mobile styling |
 | `data.js` | Beginner lessons, reference cards and question banks |
-| `intermediate.js` | Eight intermediate lessons and authored reply banks |
+| `intermediate.js` | Eight intermediate lessons and model exchanges |
+| `intermediate-bank.js` | Expanded intermediate quiz, typing and sentence-building banks |
 | `intermediate-ui.js` | Intermediate examples, sentence builder and guided conversations |
 | `app.js` | Cards, quizzes, practice and immediate feedback |
 | `test.js` | Password gate, timed test and results |
@@ -21,12 +22,12 @@ Upload all twelve files directly to the root of your repository:
 | `.nojekyll` | Serves the static site without a Jekyll build |
 | `README.md` | This setup guide |
 
-Keep their filenames unchanged and keep the nine website files together. Extract the ZIP first: upload its contents, rather than the ZIP or an enclosing folder. `index.html` must appear in your repository's top-level file list.
+Keep their filenames unchanged and keep the ten website files together. Extract the ZIP first: upload its contents, rather than the ZIP or an enclosing folder. `index.html` must appear in your repository's top-level file list.
 
 ## Publish on GitHub Pages
 
 1. Create or open a GitHub repository, for example `malo-po-malo`. GitHub Free requires a public repository for Pages.
-2. Use **Add file → Upload files** to upload the twelve extracted files, then commit them to `main`. A Git client can also copy, commit and push these files into your repository.
+2. Use **Add file → Upload files** to upload the thirteen extracted files, then commit them to `main`. A Git client can also copy, commit and push these files into your repository.
 3. Open **Settings → Pages**. Under **Build and deployment**, set **Source** to **Deploy from a branch**.
 4. Select **main** (or the branch containing your upload) and **/(root)**, then click **Save**.
 5. Wait for publication, then use **Visit site** on the Pages settings screen. It can take up to 10 minutes.
@@ -46,7 +47,7 @@ The HTML keeps `<meta name="robots" content="noindex,nofollow">`. This asks sear
 ## Included practice
 
 - Five beginner lessons: alphabet, numbers, pronouns, forms of “to be”, and basic conversation.
-- Eight compact intermediate lessons, 80 question/reply examples, 160 quiz questions, 80 typing exercises, 80 sentence builders and 16 guided conversations.
+- Eight compact intermediate lessons, 80 model exchanges, 11,503 quiz questions, 3,919 typing exercises, 3,819 sentence builders and 16 guided conversations.
 - Separate Beginner / Intermediate navigation, daily mixes and 100-question tests.
 - The beginner course retains its 168 reference cards, 9,007 quiz questions, and 6,814 typing exercises.
 - Latin/Cyrillic switching, answer reveals, hints, and immediate feedback.
@@ -70,7 +71,7 @@ Practise letter pairs, word spelling and letter counts; numbers 0–100, forward
 
 ## Intermediate course
 
-This is a focused bridge after the beginner lessons. Each lesson has ten model exchanges and two guided conversations with three learner replies each.
+This is a focused bridge after the beginner lessons. Each lesson keeps ten model exchanges and two guided conversations with three learner replies each. A much larger practice bank adds everyday combinations of people, routines, time, locations, requests and replies without moving into advanced grammar.
 
 | Lesson | Focus |
 | --- | --- |
@@ -83,15 +84,33 @@ This is a focused bridge after the beginner lessons. Each lesson has ten model e
 | Opinions & reasons | Preferences, feelings, agreement and simple reasons |
 | Keep the chat going | Repetition, clarification, reactions and closing |
 
+### Expanded intermediate banks
+
+| Lesson | Quiz questions | Typing exercises | Sentence builders |
+| --- | ---: | ---: | ---: |
+| Questions & replies | 839 | 266 | 267 |
+| Daily life | 1,991 | 602 | 599 |
+| Places & directions | 1,632 | 554 | 526 |
+| Everyday requests | 564 | 245 | 245 |
+| Plans & invitations | 2,921 | 1,014 | 944 |
+| Yesterday & the weekend | 2,230 | 678 | 678 |
+| Opinions & reasons | 536 | 214 | 214 |
+| Keep the chat going | 790 | 346 | 346 |
+| **Total** | **11,503** | **3,919** | **3,819** |
+
+The original intermediate bank contained 160 quiz questions and 80 exercises in each writing mode. This update provides over 71 times as many quiz questions and over 47 times as many exercises in each writing mode. Exact repeated quiz and typing prompts are removed across intermediate lessons; repeated sentence-builder meanings are removed within each lesson. A bank rotates through its questions before starting again.
+
+New situations include family names and ages, language skills, daily habits, transport, café and shop requests, prices, invitations, alternative days, short past replies, preferences, reasons and requests for clarification. Reviewed verb forms and fixed noun/place phrases supply the variations. The bank checks specified meanings; it does not grade unrestricted answers.
+
 The course practises short everyday exchanges. Detailed case paradigms, systematic verbal aspect, conditionals, advanced tenses, idioms and extended discussions are reserved for a later Advanced course.
 
-**Reference cards** show a question and a revealable model reply. **Quick quiz** alternates question meanings and matching a specified reply. **Type & practise** asks for a specific English meaning and accepts reviewed Serbian alternatives. **Build sentences** uses word tiles in five-sentence rounds. **Conversations** first shows a model dialogue, then asks you to type three guided replies. English translations can be shown or hidden for the examples and dialogues.
+**Reference cards** show a question and a revealable model reply. **Quick quiz** mixes understanding questions, understanding replies, matching a specified reply and completing a missing word in a reply. **Type & practise** asks for a specific English meaning and accepts reviewed Serbian alternatives. **Build sentences** uses word tiles in five-sentence rounds. **Conversations** first shows a model dialogue, then asks you to type three guided replies. English translations can be shown or hidden for the examples and dialogues.
 
 Both Serbian scripts work for typed answers. Case, quotation styles and punctuation are ignored; Serbian letter marks are checked. Reply checking uses a finite list of taught answers, so it does not assess unrestricted conversation. Sentence builders accept the taught alternatives that use exactly the supplied words. Hints and reveals do not count as first-try answers.
 
 Completed rounds are saved on this device. Active rounds start fresh on reload. Browser storage can be unavailable in private or restricted browsing; the site still runs for that visit. Switching levels resets the current round and previous test report; download a test report before switching levels.
 
-Grammar reference checks: [present tense](https://www.studyserbian.com/proba/grammar/werb_tense_pdf/serbian-present-am-verbs.pdf), [past forms and agreement](https://www.studyserbian.com/proba/grammar/werb_tense_pdf/serbian-past-tense.pdf), and [da + present constructions](https://www.studyserbian.com/proba/grammar/Word_Order_Decl.asp). These are supporting references; all intermediate examples and exercises are authored for this course.
+Grammar reference checks: [present tense](https://www.studyserbian.com/proba/grammar/werb_tense_pdf/serbian-present-am-verbs.pdf), [past forms and agreement](https://www.studyserbian.com/proba/grammar/werb_tense_pdf/serbian-past-tense.pdf), [da + present constructions](https://www.studyserbian.com/proba/grammar/Word_Order_Decl.asp), [future forms](https://www.studyserbian.com/proba/grammar/werb_tense_pdf/serbian-future-tense.pdf), and [age phrases](https://cro-srb-languages.com/zovem-se-tamara/). These are supporting references; all intermediate examples, word lists and sentence frames are authored for this course. The expanded banks combine those reviewed frames and remove repeated prompts.
 
 ## Timed test
 
@@ -103,7 +122,7 @@ At completion, review your score out of 100, correct/incorrect/missed counts, ti
 
 ## If the page does not load
 
-Check that `index.html` is at the repository root, all nine website files are uploaded, and Pages points to the branch you used and **/(root)**. For publication errors, inspect the repository's **Actions** tab. For missing styling, confirm the exact name `styles.css`; filenames are case-sensitive on the host.
+Check that `index.html` is at the repository root, all ten website files are uploaded, and Pages points to the branch you used and **/(root)**. For publication errors, inspect the repository's **Actions** tab. For missing styling, confirm the exact name `styles.css`; filenames are case-sensitive on the host.
 
 ## Official GitHub instructions
 
@@ -128,4 +147,4 @@ npm install --no-save --package-lock=false linkedom
 node --test tests/site-flow.test.cjs
 ```
 
-The DOM checks cover level isolation, both scripts, exercise events, saved progress, test scoring/timing, and the PDF generator. They are not browser layout or pronunciation checks. Tests are not an assessment of unrestricted writing or a CEFR certification.
+The bank checks cover unchanged beginner counts, distinct options/prompts/IDs, consistent translations, all-bank rotation, both scripts, correct word tiles, intermediate totals and independent agreement/age/location/past/future examples. The DOM checks cover level isolation, both scripts, exercise events, saved progress, test scoring/timing, and the PDF generator. They are not browser layout or pronunciation checks. Tests are not an assessment of unrestricted writing or a CEFR certification.
