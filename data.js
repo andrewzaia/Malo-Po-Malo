@@ -14,7 +14,7 @@
       return value === value.toUpperCase() ? pair[0][0].toUpperCase() + pair[0].slice(1) : pair[0];
     });
   }
-  function normalise(text) { return latin(text).normalize('NFC').toLowerCase().replace(/[.!?,;:]/g,'').trim().replace(/\s+/g,' '); }
+  function normalise(text) { return latin(text).normalize('NFC').toLowerCase().replace(/[.!?,;:“”„"'’]/g,'').trim().replace(/\s+/g,' '); }
   function withoutMarks(text) { return text.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'dj'); }
   function assess(input, answers) {
     const value = normalise(input);

@@ -30,8 +30,8 @@
     const newPage=()=>{page=[];pages.push(page);text('MALO PO MALO / SERBIAN PRACTICE',M,H-38,9,'blue');rule(H-49);y=H-80;};
     const paragraph=(value,size=10.5,tone='ink',gap=6)=>{for(const line of wrap(value,size,W-M*2)){if(y<BOTTOM+16)newPage();text(line,M,y,size,tone);y-=size*1.45;}y-=gap;};
     newPage();
-    paragraph('Your test results',26,'ink',14);
-    paragraph('100 mixed questions - one minute per question',11,'muted',12);
+    paragraph(report.title || 'Your test results',23,'ink',14);
+    paragraph((report.level==='intermediate'?'Intermediate':'Beginner')+' - 100 mixed questions - one minute per question',11,'muted',12);
     paragraph(report.score+' / 100 correct   ('+report.percent+'%)',23,'blue',16);
     paragraph(report.counts.correct+' correct   |   '+report.counts.incorrect+' incorrect   |   '+report.counts.missed+' missed',12,'ink',16);
     paragraph('Started: '+new Date(report.startedAt).toLocaleString('en-AU',{timeZoneName:'short'}),10.5,'muted');
@@ -56,7 +56,7 @@
       if(y-height<BOTTOM)newPage();
       entries.forEach(e=>paragraph(e.text,e.size,e.tone,e.gap));rule(y+2);y-=14;
     }
-    pages.forEach((commands,index)=>{page=commands;text('Malo po malo - 100-question test',M,32,8.5,'muted');const label='Page '+(index+1)+' of '+pages.length;text(label,W-M-width(label,8.5),32,8.5,'muted');});
+    pages.forEach((commands,index)=>{page=commands;text('Malo po malo - '+(report.level==='intermediate'?'Intermediate':'Beginner')+' test',M,32,8.5,'muted');const label='Page '+(index+1)+' of '+pages.length;text(label,W-M-width(label,8.5),32,8.5,'muted');});
     return serialize(pages,W,H,report);
   }
   function serialize(pages,W,H,report) {
@@ -85,3 +85,4 @@
   }
   window.SerbianPDF={create};
 })();
+
