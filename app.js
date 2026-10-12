@@ -14,7 +14,7 @@
   const lesson = () => D.lessons.find(l=>l.id===state.lesson);
   const activeLessons=()=>D.getLessons(state.level);
   const levelTitle=()=>D.levels.find(l=>l.id===state.level).title;
-  const availableModes=()=>state.level==='intermediate'?['learn','quiz','practice','build','talk']:['learn','quiz','practice'];
+  const availableModes=()=>state.level!=='beginner'?['learn','quiz','practice','build','talk']:['learn','quiz','practice'];
   const promptText=question=>D.formatPrompt(question.prompt,question.serbianSegments,state.script);
   function persist(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify({level:state.level,lesson:state.lesson,script:state.script,progress}));storageAvailable=true;}catch{storageAvailable=false;}}
   function progressNote(){const rounds=Number(progress[state.lesson]?.rounds)||0;$('progress-note').textContent=storageAvailable?(rounds?rounds+' completed '+(rounds===1?'round':'rounds')+' in this lesson.':'Completed rounds are saved on this device.'):'Progress is available for this visit; browser storage is unavailable.';}
@@ -95,7 +95,7 @@
     $('level-description').textContent=D.levels.find(item=>item.id===state.level).description;
     document.querySelector('.sidebar-bottom').textContent=levelTitle()+' · Little steps, every day';
     document.querySelectorAll('[data-level]').forEach(b=>{b.setAttribute('aria-pressed',String(b.dataset.level===state.level));b.disabled=running;});
-    document.querySelectorAll('[data-intermediate-mode]').forEach(b=>b.hidden=state.level!=='intermediate');
+    document.querySelectorAll('[data-intermediate-mode]').forEach(b=>b.hidden=state.level==='beginner');
     progressNote();
     document.querySelectorAll('[data-script]').forEach(b=>{b.setAttribute('aria-pressed',String(b.dataset.script===state.script));b.disabled=running;});
     document.querySelectorAll('[data-lesson],[data-action="daily-mix"]').forEach(b=>b.disabled=running);
@@ -111,7 +111,7 @@
     }else if(state.mode==='learn')renderLearn();else if(state.mode==='build'||state.mode==='talk')window.SerbianCourseUI.render(state.mode,l,state.script);else renderExercise();
   }
   function renderLearn() {
-    if(state.level==='intermediate'){window.SerbianCourseUI.renderLearn(lesson(),state);return;}
+    if(state.level!=='beginner'){window.SerbianCourseUI.renderLearn(lesson(),state);return;}
     const l=lesson(), list=cards(), card=list[state.selected], isLetter=card.kind==='letter';
     let grid=list.map((c,i)=>{
       const selected=i===state.selected;

@@ -248,3 +248,11 @@ button,input,select,textarea{max-width:100%}
     padding-top: 9px;
   }
 }
+
+
+/* Three course levels fit comfortably in narrow portrait viewports. */
+.level-buttons{min-width:0}
+@media(max-width:600px){
+  .level-buttons{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:3px}
+  .level-buttons button{min-width:0;width:100%;padding:9px 3px;font-size:clamp(.72rem,2.55vw,.83rem);line-height:1.25;white-space:normal;overflow-wrap:anywhere}
+}

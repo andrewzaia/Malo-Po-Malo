@@ -29,6 +29,7 @@ Start with the fundamentals or choose Intermediate when you're ready to practise
 - **Type & practise:** Build recall by writing the answers yourself.
 - **Build sentences:** Arrange words into complete Serbian sentences in Intermediate lessons.
 - **Guided conversations:** Practise responding to everyday questions and exchanges.
+- **Advanced Serbian:** Work on opinions, aspect, conditionals, case forms, problem-solving, reading inference, expressions and negotiations through 8 further lessons.
 - **Latin and Cyrillic:** Switch between Serbia's two writing systems as you learn.
 - **Daily practice:** Mix a few exercises into a manageable routine.
 
@@ -39,7 +40,7 @@ The **Testing** section offers a 100-question timed assessment based on your sel
 ## How to get started
 
 1. **[Visit Malo po malo](https://andrewzaia.github.io/Malo-Po-Malo/).**
-2. Choose **Beginner** or **Intermediate**.
+2. Choose **Beginner**, **Intermediate** or **Advanced**.
 3. Select a lesson from the menu.
 4. Start with **Reference cards**, then try a **Quick quiz** or **Type & practise**.
 5. Return regularly and build confidence a little at a time.
@@ -71,10 +72,10 @@ This is a static HTML, CSS and JavaScript website. There is no application serve
 
 To run locally, clone or download this repository and open `index.html` in a browser. The site is published through GitHub Pages.
 
-The beginner and intermediate lesson content lives in `data.js`, `intermediate.js` and `intermediate-bank.js`. The optional developer checks can be run with:
+Lesson content lives in `data.js`, `intermediate.js`, `intermediate-bank.js` and `advanced.js`. The optional developer checks can be run with:
 
 ```sh
-node --test tests/course-bank.test.cjs
+node --test tests/*.test.cjs
 ```
 
 The timed-test access word is configured client-side, so it is not secure authentication.
