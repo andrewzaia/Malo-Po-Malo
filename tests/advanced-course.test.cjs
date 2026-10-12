@@ -43,3 +43,14 @@ test('Every advanced lesson supports 100-question testing and all exercise modes
  }
  assert.ok(ids.size>=300);
 });
+
+test('Advanced scripts load before app startup and all modes remain available',()=>{
+ const html=fs.readFileSync(path.join(__dirname,'..','index.html'),'utf8');
+ const app=fs.readFileSync(path.join(__dirname,'..','app.js'),'utf8');
+ const ui=fs.readFileSync(path.join(__dirname,'..','intermediate-ui.js'),'utf8');
+ assert.ok(html.includes('data-level="advanced"'));
+ assert.ok(html.indexOf('advanced.js')>html.indexOf('intermediate-ui.js'));
+ assert.ok(html.indexOf('advanced.js')<html.indexOf('app.js'));
+ assert.ok(app.includes("state.level!=='beginner'?['learn','quiz','practice','build','talk']"));
+ assert.ok(ui.includes("app()?.readState().level==='beginner'"));
+});
