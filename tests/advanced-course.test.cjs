@@ -54,3 +54,15 @@ test('Advanced scripts load before app startup and all modes remain available',(
  assert.ok(app.includes("state.level!=='beginner'?['learn','quiz','practice','build','talk']"));
  assert.ok(ui.includes("app()?.readState().level==='beginner'"));
 });
+
+test('Level selector stays compact while retaining descriptive accessible labels',()=>{
+  const html=fs.readFileSync(path.join(__dirname,'..','index.html'),'utf8');
+  const css=fs.readFileSync(path.join(__dirname,'..','styles.css'),'utf8');
+  const app=fs.readFileSync(path.join(__dirname,'..','app.js'),'utf8');
+  for(const [id,number,title] of [['beginner',1,'Beginner'],['intermediate',2,'Intermediate'],['advanced',3,'Advanced']]){
+    assert.ok(html.includes('data-level="'+id+'" aria-pressed='));
+    assert.ok(html.includes('aria-label="Level '+number+', '+title+'" title="'+title+'">Level '+number+'</button>'));
+  }
+  assert.ok(css.includes('grid-template-columns:repeat(3,minmax(0,1fr))'));
+  assert.ok(app.includes("$('level-description').textContent=levelTitle()+' · '"));
+});
