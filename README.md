@@ -10,24 +10,22 @@ No downloads, installation or account required. Open the site in your browser an
 
 ## What you'll learn
 
-Malo po malo has two learning levels:
+Malo po malo has three progressive learning levels:
 
-| Beginner | Intermediate |
-| --- | --- |
-| The Serbian alphabet | Questions and natural replies |
-| Numbers and counting | Daily routines and everyday life |
-| Pronouns | Places and directions |
-| Forms of “to be” | Requests, shopping and cafés |
-| Basic greetings and conversation | Plans, invitations, past events, opinions and keeping a conversation going |
+| Level 1 · Beginner | Level 2 · Intermediate | Level 3 · Advanced |
+| --- | --- | --- |
+| The alphabet, numbers and first words | Questions, routines and familiar conversations | Opinions, debate and nuanced replies |
+| Pronouns and forms of “to be” | Plans, invitations and past events | Verb aspect, conditional forms and cases |
+| Basic greetings and introductions | Sentence building and guided exchanges | Problem-solving, reading comprehension and negotiations |
 
-Start with the fundamentals or choose Intermediate when you're ready to practise longer sentences and guided exchanges.
+Start with the fundamentals and move on when you feel ready. The shorter labels in the website's level selector keep all three options comfortable on mobile and desktop screens.
 
 ## Learn your way
 
 - **Reference cards:** Study useful Serbian words, phrases and model answers, with translations and revealable explanations.
 - **Quick quizzes:** Test what you know in short, five-question rounds with immediate feedback.
 - **Type & practise:** Build recall by writing the answers yourself.
-- **Build sentences:** Arrange words into complete Serbian sentences in Intermediate lessons.
+- **Build sentences:** Arrange words into complete Serbian sentences in Intermediate and Advanced lessons.
 - **Guided conversations:** Practise responding to everyday questions and exchanges.
 - **Advanced Serbian:** Work on opinions, aspect, conditionals, case forms, problem-solving, reading inference, expressions and negotiations through 8 further lessons.
 - **Latin and Cyrillic:** Switch between Serbia's two writing systems as you learn.
@@ -40,7 +38,7 @@ The **Testing** section offers a 100-question timed assessment based on your sel
 ## How to get started
 
 1. **[Visit Malo po malo](https://andrewzaia.github.io/Malo-Po-Malo/).**
-2. Choose **Beginner**, **Intermediate** or **Advanced**.
+2. Choose **Level 1 (Beginner)**, **Level 2 (Intermediate)** or **Level 3 (Advanced)**.
 3. Select a lesson from the menu.
 4. Start with **Reference cards**, then try a **Quick quiz** or **Type & practise**.
 5. Return regularly and build confidence a little at a time.
