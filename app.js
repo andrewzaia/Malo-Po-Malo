@@ -92,7 +92,7 @@
     $('lesson-description').textContent=l.description;
     $('lesson-count').textContent=l.cards.length+' cards · '+D.poolCounts[l.id].quiz+' quiz questions';
     $('tip-content').textContent=l.tip;
-    $('level-description').textContent=D.levels.find(item=>item.id===state.level).description;
+    $('level-description').textContent=levelTitle()+' · '+D.levels.find(item=>item.id===state.level).description;
     document.querySelector('.sidebar-bottom').textContent=levelTitle()+' · Little steps, every day';
     document.querySelectorAll('[data-level]').forEach(b=>{b.setAttribute('aria-pressed',String(b.dataset.level===state.level));b.disabled=running;});
     document.querySelectorAll('[data-intermediate-mode]').forEach(b=>b.hidden=state.level==='beginner');
