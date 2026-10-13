@@ -172,9 +172,9 @@
     unit.exchanges.forEach((r,i)=>{
       const meta={id:id+'-quiz-'+i+'-reply',category:'reply',optionsScript:'display',serbianSegments:[r.question]};
       const wrong=unique(unit.exchanges.filter((_,j)=>j!==i).map(x=>x.reply)).filter(s=>!unique([r.reply,...r.alternatives]).some(a=>D.normalise(a)===D.normalise(s))).slice(0,3);
-      D.quiz[id].push([`Reply to “${r.question}” with “${r.english}”. Choose the matching Serbian reply.`,r.reply,wrong,`${r.reply} — ${r.english} ${r.note}`,meta]);
+      D.quiz[id].push([`Reply to “${r.question}” with “${r.english}”. Choose the matching Serbian reply.`,r.reply,wrong,`${r.reply} - ${r.english} ${r.note}`,meta]);
       const questionChoices=unique(unit.exchanges.filter((_,j)=>j!==i).map(x=>x.questionEnglish)).filter(s=>s!==r.questionEnglish).slice(0,3);
-      D.quiz[id].push([`What does “${r.question}” mean?`,r.questionEnglish,questionChoices,`${r.question} — ${r.questionEnglish}`,{id:id+'-quiz-'+i+'-meaning',category:'understand-question',optionsScript:'english',serbianSegments:[r.question]}]);
+      D.quiz[id].push([`What does “${r.question}” mean?`,r.questionEnglish,questionChoices,`${r.question} - ${r.questionEnglish}`,{id:id+'-quiz-'+i+'-meaning',category:'understand-question',optionsScript:'english',serbianSegments:[r.question]}]);
       D.practice[id].push([`Reply to “${r.question}” with “${r.english}”.`,unique([r.reply,...r.alternatives]),r.note,{id:id+'-practice-'+i,category:'reply',optionsScript:'display',explanation:r.note,serbianSegments:[r.question]}]);
     });
     D.builders[id]=unit.exchanges.map((r,i)=>{

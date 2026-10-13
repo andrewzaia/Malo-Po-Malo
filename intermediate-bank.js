@@ -345,17 +345,17 @@
     rows.forEach((row,index)=>{
       const answers=unique([row.reply,...row.alternatives]);
       const wrong=alternativesFor(candidates,row,'reply',answers,index*31);
-      quiz(`Reply to “${row.question}” with “${row.english}”. Choose the matching Serbian reply.`,row.reply,wrong,`${row.reply} — ${row.english} ${row.note}`,'reply',[row.question],index,'display');
+      quiz(`Reply to “${row.question}” with “${row.english}”. Choose the matching Serbian reply.`,row.reply,wrong,`${row.reply} - ${row.english} ${row.note}`,'reply',[row.question],index,'display');
       const questionWrong=alternativesFor(candidates,row,'questionEnglish',[row.questionEnglish],index*17);
-      quiz(`What does “${row.question}” mean?`,row.questionEnglish,questionWrong,`${row.question} — ${row.questionEnglish}`,'understand-question',[row.question],index,'english');
+      quiz(`What does “${row.question}” mean?`,row.questionEnglish,questionWrong,`${row.question} - ${row.questionEnglish}`,'understand-question',[row.question],index,'english');
       const replyWrong=alternativesFor(candidates,row,'english',[row.english],index*13);
       // Include speaker/meaning context so gender-specific forms remain unambiguous.
-      quiz(`What does the reply “${row.reply}” mean?`,row.english,replyWrong,`${row.reply} — ${row.english} ${row.note}`,'understand-reply',[row.reply],index,'english');
+      quiz(`What does the reply “${row.reply}” mean?`,row.english,replyWrong,`${row.reply} - ${row.english} ${row.note}`,'understand-reply',[row.reply],index,'english');
       if(row.focus) {
         const [focus,forms]=row.focus,words=row.reply.split(/\s+/);
         const position=words.findIndex(w=>D.normalise(w)===D.normalise(focus));
         const wrongForms=unique(forms).filter(f=>D.normalise(f)!==D.normalise(focus)).slice(0,3);
-        if(position>=0){words[position]='___';const gap=words.join(' ');quiz(`Complete “${gap}” to say “${row.english}”.`,focus,wrongForms,`${row.reply} — ${row.english} ${row.note}`,'complete-reply',[gap],index,'display');}
+        if(position>=0){words[position]='___';const gap=words.join(' ');quiz(`Complete “${gap}” to say “${row.english}”.`,focus,wrongForms,`${row.reply} - ${row.english} ${row.note}`,'complete-reply',[gap],index,'display');}
       }
       const prompt=`Reply to “${row.question}” with “${row.english}”.`;
       if(!seenPractice.has(D.normalise(prompt))) {

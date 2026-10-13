@@ -126,7 +126,7 @@
       id:'a-reading',title:'Read between the lines',serbian:'Razumevanje teksta',short:'Notices, messages & inference',
       description:'Read short Serbian passages and identify facts, reasons, implications and tone.',
       tip:'Read the whole passage before answering. Signal words like međutim, zato and uprkos tome can change the conclusion.',
-      patterns:[['Međutim','However — a contrast follows'],['Iako / Uprkos tome','Although / Despite that'],['Pre nego što / Čim','Before / As soon as']],
+      patterns:[['Međutim','However - a contrast follows'],['Iako / Uprkos tome','Although / Despite that'],['Pre nego što / Čim','Before / As soon as']],
       exchanges:[
         x('„Prodavnica se zatvara u šest, ali subotom radi do osam.“ Kada radi duže?','The shop closes at six, but on Saturdays it is open until eight. When is it open longer?','Subotom radi duže.','It is open longer on Saturdays.','The contrast after ali changes Saturday hours.'),
         x('„Ulaz je besplatan za decu mlađu od dvanaest godina.“ Ko ne plaća ulaz?','Admission is free for children under twelve. Who does not pay?','Deca mlađa od dvanaest godina ne plaćaju.','Children under twelve do not pay.','Mlađu od sets an upper age boundary.'),
@@ -149,7 +149,7 @@
       id:'a-expressions',title:'Sound more natural',serbian:'Prirodni izrazi',short:'Idioms, tone & register',
       description:'Recognise common spoken expressions, soften statements and respond in a natural register.',
       tip:'Idioms are best learnt as whole expressions. Notice context: nema veze can dismiss a small problem, while nema šanse expresses strong doubt.',
-      patterns:[['Nema veze.','Never mind / It does not matter'],['Videćemo.','We will see — noncommittal'],['Koliko znam…','As far as I know…']],
+      patterns:[['Nema veze.','Never mind / It does not matter'],['Videćemo.','We will see - noncommittal'],['Koliko znam…','As far as I know…']],
       exchanges:[
         x('Izvini što kasnim pet minuta.','Sorry I am five minutes late.','Nema veze, tek sam stigao.','No problem, I only just arrived. (male speaker)','Nema veze politely brushes off a minor inconvenience.'),
         x('Hoćemo li sigurno uspeti?','Are we certain we will succeed?','Videćemo, još je rano da tvrdimo.','We will see; it is still too early to say.','Videćemo is less definite than da or ne.'),
@@ -210,9 +210,9 @@
     rows.forEach((r,i)=>{
       const base=id+'-quiz-'+i;
       const prompt='Reply to “'+r.question+'” with “'+r.english+'”. Choose the matching Serbian reply.';
-      D.quiz[id].push([prompt,r.reply,choices(rows,'reply',r,true),r.reply+' — '+r.english+' '+r.note,{id:base+'-reply',category:'reply',optionsScript:'display',serbianSegments:[r.question]}]);
+      D.quiz[id].push([prompt,r.reply,choices(rows,'reply',r,true),r.reply+' - '+r.english+' '+r.note,{id:base+'-reply',category:'reply',optionsScript:'display',serbianSegments:[r.question]}]);
       D.quiz[id].push(['What does “'+r.question+'” mean?',r.questionEnglish,choices(rows,'questionEnglish',r),r.questionEnglish+' '+r.note,{id:base+'-question',category:'understand-question',optionsScript:'english',serbianSegments:[r.question]}]);
-      D.quiz[id].push(['In this exchange, what does “'+r.reply+'” mean?',r.english,choices(rows,'english',r),r.reply+' — '+r.english,{id:base+'-meaning',category:'understand-reply',optionsScript:'english',serbianSegments:[r.reply]}]);
+      D.quiz[id].push(['In this exchange, what does “'+r.reply+'” mean?',r.english,choices(rows,'english',r),r.reply+' - '+r.english,{id:base+'-meaning',category:'understand-reply',optionsScript:'english',serbianSegments:[r.reply]}]);
       D.practice[id].push(['Reply to “'+r.question+'” with “'+r.english+'”.',unique([r.reply,...r.alternatives]),r.note,{id:id+'-practice-'+i,category:'reply',optionsScript:'display',explanation:r.note,serbianSegments:[r.question]}]);
     });
     D.builders[id]=rows.map((r,i)=>{

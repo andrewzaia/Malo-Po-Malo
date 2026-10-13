@@ -74,7 +74,7 @@
   const conversation=conversationsRows.map((r,i)=>({id:'phrase-'+i,latin:r[0],english:r[1],sound:r[2],note:r[3],label:r[0]}));
   const lessons=[
     {id:'alphabet',title:'The alphabet',serbian:'Abeceda / Azbuka',short:'30 letters',description:'Meet the letters, then say them out loud. Start with five today.',tip:'Serbian has 30 letters. Lj, nj and dž are each one letter in Latin. Their Cyrillic partners are љ, њ and џ.',cards:alphabet},
-    {id:'numbers',title:'Numbers',serbian:'Brojevi',short:'1 to 10,000',description:'Start with 1–10, then try the teens and the tens.',tip:'Learn 1–20 first. Then count by tens to 100. For 21, put the words together: dvadeset jedan.',cards:numbers},
+    {id:'numbers',title:'Numbers',serbian:'Brojevi',short:'1 to 10,000',description:'Start with 1-10, then try the teens and the tens.',tip:'Learn 1-20 first. Then count by tens to 100. For 21, put the words together: dvadeset jedan.',cards:numbers},
     {id:'pronouns',title:'Pronouns',serbian:'Lične zamenice',short:'I, you, we…',description:'Small words that tell us who we are talking about.',tip:'Ti is informal and singular. Vi means several people, or one person politely. They has three forms: oni, one and ona.',cards:pronouns},
     {id:'be',title:'“To be”',serbian:'Biti',short:'sam, si, je…',description:'Build your first sentences with “I am”, “you are” and “we are”.',tip:'The everyday short forms are sam, si, je, smo, ste and su. Practise with a pronoun first: ja sam, ti si. Short forms do not stand alone at the start of a sentence.',cards:be},
     {id:'conversation',title:'Everyday conversation',serbian:'Razgovor',short:'Say your first words',description:'Say hello, introduce yourself, and ask for a little help.',tip:'Begin with Dobar dan, Hvala and Doviđenja. Use Kako si? with a friend and Kako ste? politely.',cards:conversation}
@@ -603,7 +603,7 @@
     };
   }
   const poolCounts=Object.fromEntries(lessons.map(l=>[l.id,{quiz:quiz[l.id].length,practice:practice[l.id].length}]));
-  lessons.find(l=>l.id==='numbers').tip='For 21–99, say the tens first and then the units: dvadeset jedan (21), trideset dva (32), četrdeset pet (45). Keep them as separate words. Start with 1–20 and the tens cards, then try combinations.';
+  lessons.find(l=>l.id==='numbers').tip='For 21-99, say the tens first and then the units: dvadeset jedan (21), trideset dva (32), četrdeset pet (45). Keep them as separate words. Start with 1-20 and the tens cards, then try combinations.';
   lessons.find(l=>l.id==='be').tip='Everyday short forms: sam, si, je, smo, ste, su. In groups, i means and: Ana i ja smo (we), ti i Ana ste (you plural), Ana i Marko su (they). Short forms follow a word or phrase; they do not start a sentence.';
   be.filter(card=>/^be-[0-9]+$/.test(card.id)).forEach(card=>{card.note='Sentence words: ovde = here, tamo = there, kod kuće = at home, u školi = at school. Swap the place; keep the verb matched to the person.';});
   lessons.find(l=>l.id==='be').tip += ' Negative forms are nisam, nisi, nije, nismo, niste, nisu. Start questions with Da li + short verb + subject. Learn the place and time cards before trying longer combinations.';

@@ -55,7 +55,7 @@ The **Testing** section offers a 100-question timed assessment based on your sel
 
 ## Also learning Assyrian?
 
-Explore **[Khacha Khacha — Learn Assyrian (Eastern Sureth)](https://andrewzaia.github.io/Khacha-Khacha/)**, a companion learning website built around the same little-by-little approach.
+Explore **[Khacha Khacha - Learn Assyrian (Eastern Sureth)](https://andrewzaia.github.io/Khacha-Khacha/)**, a companion learning website built around the same little-by-little approach.
 
 ## About the project
 
